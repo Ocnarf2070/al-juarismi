@@ -7,7 +7,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import click
 import matplotlib.pyplot as plt
 
 import aljuarismi as al
@@ -18,47 +17,45 @@ def plot_dataset(dataset, parameters):
     Plots graphically a column of the dataset.
     :param dataset: The current dataset.
     :param parameters: The parameter for the graphic.
-    :return:
     """
+    a = int(parameters['from'] if parameters['from'] else 0)
+    b = int(parameters['to'] if parameters['to'] else dataset.index.size)
+    if b < a:
+        print('This operation cannot be done.\nThe starting row number is greater than the last row number.')
+        raise Exception()
+    if b:
+        dataset = dataset.iloc[:b]
+    if a:
+        dataset = dataset.iloc[a:]
+
     ncol = dataset.columns.size
-    if ncol - 1 > 1:
+    if ncol > 1:
         if not parameters["columns"]:
-            print("I have more than one column available, which is the one to be selected?")
-            al.voice("I have more than one column available, which is the one to be selected?")
-            print(list(dataset.columns.values))
-            column_name = ''
-            while column_name == '':
-                al.voice('Which column do you want to plot?')
-                column_name = click.prompt('Which column do you want to plot?', type=str)
-                click.echo('DEBUG: %s' % column_name)
+            column_name = al.obtain_column(dataset)
             plt.figure()
-            plt.plot(dataset[column_name].values)
+            plt.plot(dataset[column_name])
             plt.title(column_name)
             plt.show(block=False)
         else:
             for column_name in parameters["columns"]:
                 plt.figure()
-                plt.plot(dataset[column_name].values)
+                plt.plot(dataset[column_name])
                 plt.title(column_name)
                 plt.show(block=False)
 
     else:
         plt.figure()
-        plt.plot(dataset.values)
+        plt.plot(dataset)
         plt.title(parameters["Dataset"])
         plt.show(block=False)
 
 
-def execute_plot(current_dataset, parameters):
+def execute_plot(parameters):
     """
     Execute the function plot.
-    :param current_dataset: The current dataset.
     :param parameters: The parameters for the graphic (dataset name, intervals,...).
-    :return:
     """
+    workspace = al.Workspace()
     data_name = parameters["Dataset"]
-    if data_name == '' or data_name == 'current_dataset':
-        plot_dataset(current_dataset, parameters)
-    else:
-        dataset = al.Workspace().get_dataset(data_name)
-        plot_dataset(dataset, parameters)
+    dataset = workspace.get_dataset(data_name)
+    plot_dataset(dataset, parameters)
