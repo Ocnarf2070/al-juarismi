@@ -7,7 +7,12 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except:
+    import matplotlib
+    matplotlib.use('PS')
+    import matplotlib.pyplot as plt
 
 import aljuarismi as al
 
