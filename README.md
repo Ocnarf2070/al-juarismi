@@ -1,4 +1,5 @@
 # ALJUARISMI
+[![Build Status](https://travis-ci.org/shapelets/al-juarismi.svg?branch=master)](https://travis-ci.org/shapelets/al-juarismi)
 
 Aljuarismi is a chat assistant capable of executing time series analytics and plotting its results.
 The main purpose of this chat bot is to provide a way to perform analytics in an easy and natural way.
